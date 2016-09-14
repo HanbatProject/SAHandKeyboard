@@ -11,6 +11,7 @@
 
 class Matrix : public TemplateSingleton<Matrix> {
 public:
+	const int BLUR_ELEMENT_SIZE = 3;
 	// int minH = 130, maxH = 160, minS = 10, maxS = 40, minV = 7, maxV = 130;
 	// Default HSV를 설정한다. 위는 원래 있던 default
     int minH = 2, maxH = 23;

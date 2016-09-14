@@ -2,7 +2,7 @@
 #pragma warning (disable:4819)
 
 #include "targetver.h"
-#include "constants.h"
+#include "defines.h"
 
 #include <iostream>
 #include <stdlib.h>

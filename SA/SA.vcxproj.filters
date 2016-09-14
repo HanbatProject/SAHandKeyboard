@@ -56,7 +56,7 @@
     <ClInclude Include="TemplateSingleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="constants.h">
+    <ClInclude Include="defines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

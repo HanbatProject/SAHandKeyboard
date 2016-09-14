@@ -156,7 +156,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Vector.cpp" />
-    <ClInclude Include="constants.h" />
+    <ClInclude Include="defines.h" />
     <ClInclude Include="KeyBoard.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Matrix.h" />
