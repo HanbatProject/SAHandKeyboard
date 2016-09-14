@@ -6,7 +6,6 @@
 
 #include "stdafx.h"
 #include "TemplateSingleton.h"
-#include "KeyBoard.h"
 
 class Vector : public TemplateSingleton<Vector> {
 private:
@@ -49,7 +48,7 @@ public:
 	void initHandTip();
 	void findDrawContours();
 	void handRecognization();
-	void handTipDetection(KeyBoard&, int i);
+	void handTipDetection(int i);
 
 	float innerAngle(float, float, float, float, float, float);
 	void handTipDetectWithAngle();

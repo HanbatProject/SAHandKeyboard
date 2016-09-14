@@ -60,7 +60,7 @@ public:
 	void initMain(VideoCapture&);
 	void makeFrame();
 	void morphologyFrame();
-	void printFrame(bool, KeyBoard);
+	void printFrame(bool);
 	void callbackMouse(Mat* back);
 
 	// getters

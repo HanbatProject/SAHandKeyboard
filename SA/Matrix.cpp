@@ -94,7 +94,8 @@ void Matrix::morphologyFrame()
 	// TODO 침식했는데 다시 팽창하는 이유?, 두번 블러처리하는 이유?, 두번 침식하는 이유? - 지웠다 해봤다를 해보자
 }
 
-void Matrix::printFrame(bool frame_valid, KeyBoard keyboard) {
+void Matrix::printFrame(bool frame_valid) {
+	KeyBoard keyboard;
 	Mouse mouse;
 	if (!frame_valid) {
 		return;

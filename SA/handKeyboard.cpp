@@ -9,7 +9,6 @@
 #include "stdafx.h"
 #include "Matrix.h"
 #include "Vector.h"
-#include "KeyBoard.h"
 
 int main() {
 	// 웹캠으로 캡처화면을 받아옴
@@ -18,9 +17,6 @@ int main() {
 	if (!MATRIX->isVideoCamera(capture)) {
 		return 0;
 	}
-
-	// 키보드
-	KeyBoard keyboard;
 
 	// HSV 프레임 설정
 	MATRIX->setHSV();
@@ -51,8 +47,8 @@ int main() {
 				
 				// 손가락 찾기(handtip detection)
 				// 두 손(0, 1)을 찾음
-				VECTOR->handTipDetection(keyboard, 0);
-				VECTOR->handTipDetection(keyboard, 1);
+				VECTOR->handTipDetection(0);
+				VECTOR->handTipDetection(1);
 			}
 		}
 		catch (exception& e) {
@@ -61,7 +57,7 @@ int main() {
 		}
 
 		//처리를 끝내고 프레임 창을 나타냄
-		MATRIX->printFrame(frame_valid, keyboard);
+		MATRIX->printFrame(frame_valid);
 
 		if (waitKey(30) == 27) {
 			// ESC 누르면 break

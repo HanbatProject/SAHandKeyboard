@@ -66,19 +66,21 @@ void Vector::handRecognization() {
 	}
 }
 
-void Vector::handTipDetection(KeyBoard& keyboard, int i) {
+void Vector::handTipDetection(int i) {
+	KeyBoard keyboard;
 	//					std::cout << "for " << endl;
 	if (!handContours[i].empty()) {
 		vector<Point> pointCenter(contSize);
 		// 볼록한 외곽을 찾는 메소드
 		// convexHull(볼록 껍질) : 몇 개 점을 골라 안의 점을 모두 포함하는 최외곽 점들을 찾음
-		convexHull(handContours[i], hullIndexes[i], false);
+		convexHull(handContours[i], hullIndexes[i]);
 		
-		// convexityDefects : 볼록한 데서 결함, 즉 손가락 사이의 들어간 부분을 찾음
+		// convexityDefects : 볼록한 데서 결함(손가락 사이의 들어간 부분)을 찾음
 		convexityDefects(handContours[i], hullIndexes[i], intVecDefects[i]);
 		
 		for (int j = 0; j < hullIndexes[i].size(); j++) {
 			int index = hullIndexes[i][j];
+			// push_back은 괄호 안의 파라미터를 복사하거나 옮기겠다는 것을 의미한다.
 			pointHull[i].push_back(handContours[i][index]);
 		}
 
@@ -95,7 +97,7 @@ void Vector::handTipDetection(KeyBoard& keyboard, int i) {
 				count++;
 
 				pointDefects[i].push_back(handContours[i][index2]);
-				//drw depth_point				circle(Main_frame, contours[i][index2], 3, Scalar(0, 0, 255), 3);//red
+//drw depth_point				circle(Main_frame, contours[i][index2], 3, Scalar(0, 0, 255), 3);//red
 				pointCenter[i] += handContours[i][index2];
 			}
 		}
@@ -127,9 +129,12 @@ void Vector::handTipDetection(KeyBoard& keyboard, int i) {
 
 		for (int a = 1; a < handContours[i].size() - 1; a++) {
 			if (handContours[i][a].inside(handSquare)) {
-				preDist = (int)(pow(pointCenter[i].x - handContours[i][a - 1].x, 2) + pow(pointCenter[i].y - handContours[i][a - 1].y, 2));
-				currDist = (int)(pow(pointCenter[i].x - handContours[i][a].x, 2) + pow(pointCenter[i].y - handContours[i][a].y, 2));
-				nextDist = (int)(pow(pointCenter[i].x - handContours[i][a + 1].x, 2) + pow(pointCenter[i].y - handContours[i][a + 1].y, 2));
+				preDist = (int)(pow(pointCenter[i].x - handContours[i][a - 1].x, 2)
+					       + pow(pointCenter[i].y - handContours[i][a - 1].y, 2));
+				currDist = (int)(pow(pointCenter[i].x - handContours[i][a].x, 2)
+					       + pow(pointCenter[i].y - handContours[i][a].y, 2));
+				nextDist = (int)(pow(pointCenter[i].x - handContours[i][a + 1].x, 2)
+					       + pow(pointCenter[i].y - handContours[i][a + 1].y, 2));
 
 				if (currDist > preDist && currDist > nextDist && currDist > 64 * 64) { //handTip detection.
 
