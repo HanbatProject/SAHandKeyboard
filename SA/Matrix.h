@@ -6,17 +6,16 @@
 
 #include "stdafx.h"
 #include "TemplateSingleton.h"
-#include "KeyBoard.h"
 
 
 class Matrix : public TemplateSingleton<Matrix> {
-public:
+private:
 	const int BLUR_ELEMENT_SIZE = 3;
 	// int minH = 130, maxH = 160, minS = 10, maxS = 40, minV = 7, maxV = 130;
 	// Default HSV를 설정한다. 위는 원래 있던 default
-    int minH = 2, maxH = 23;
-	int minS = 13, maxS = 140;
-	int minV = 70, maxV = 255;
+    int minH = 2, maxH = 36;
+	int minS = 13, maxS = 196;
+	int minV = 120, maxV = 255;
 private:
 	bool operationBack = false;
 
@@ -44,7 +43,6 @@ private:
 
 	// 키보드 이미지
 	Mat keyBoardImage;
-	Mat dst;
 
 	// Mat YCrCb_frame;
 	// Mat blur_dilate_frame;
@@ -56,7 +54,7 @@ public:
 	bool isVideoCamera(VideoCapture);
 	bool isOperationBack();
 
-	void setHSV();
+	void setHSVTrackbar();
 	void initMain(VideoCapture&);
 	void makeFrame();
 	void morphologyFrame();

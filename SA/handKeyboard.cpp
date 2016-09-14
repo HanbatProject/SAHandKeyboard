@@ -18,8 +18,8 @@ int main() {
 		return 0;
 	}
 
-	// HSV 프레임 설정
-	MATRIX->setHSV();
+	// HSV 변환된 윈도우 트랙바 설정
+	MATRIX->setHSVTrackbar();
 
 	// 핸드팁 초기화
 	VECTOR->initHandTip();

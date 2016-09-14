@@ -9,6 +9,8 @@
 
 class Vector : public TemplateSingleton<Vector> {
 private:
+	const int DEFECTS_COUNT = 8;
+	const int CONTOUR_AREA_MIN = 4000;
 	// Contours(윤곽) 필드
 	// 벡터 포인트형 벡터(점들이 모여서 선이 되는 원리)
 	// 기본 외곽 벡터
@@ -29,15 +31,15 @@ private:
 	// 볼록결함 - 움푹 들어간 부분 (ConvexityDefects)
 
 	/*
-	*	Vec4i intVecDefects
+	*	Vec4i vecDefects
 	*	[0] start_index
 	*	[1] end_index
 	*	[2] farthest_pt_index
 	*	[3] fixpt_depth
 	*/
-	vector<int> handPointDefects;		 // 움푹 들어간 부분의 벡터
-	vector<vector<Point>> pointDefects;  // 점 볼록결함선
-	vector<vector<Vec4i>> intVecDefects; // 벡터 볼록결함 감지
+	vector<vector<Point>> pointDefects;  // 볼록결함 점들의 선 벡터
+	vector<vector<Vec4i>> vecDefects;	 // 볼록결함 벡터를 저장하는 선 벡터
+	vector<int> handPointDefects;		 // 움푹 들어간 부분을 최종 저장할 벡터
 
 	vector<vector<Point>> pointHull;	 // 외곽선
 	vector<vector<int>> hullIndexes;     // 외곽선 인덱스

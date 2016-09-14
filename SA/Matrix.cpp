@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Matrix.h"
+#include "KeyBoard.h"
 #include "Mouse.h"
 
 // 생성자
@@ -8,16 +9,7 @@ Matrix::Matrix() {
 	keyBoardImage = imread("keyboard.png");
 }
 
-Mat Matrix::getMainFrame()
-{
-	return Main_frame;
-}
-
-Mat Matrix::getContoursFrame()
-{
-	return contours_frame;
-}
-
+// booleans
 bool Matrix::isVideoCamera(VideoCapture capture) {
 	if (!capture.isOpened()) {
 		cerr << "카메라가 연결되어 있지 않습니다!" << endl;
@@ -30,10 +22,19 @@ bool Matrix::isOperationBack() {
 	return operationBack;
 }
 
+// getters
+Mat Matrix::getMainFrame()
+{
+	return Main_frame;
+}
 
+Mat Matrix::getContoursFrame()
+{
+	return contours_frame;
+}
 
 // HSV 창을 설정한다
-void Matrix::setHSV() {
+void Matrix::setHSVTrackbar() {
 	// 프레임 창 이름을 설정한다.
 	namedWindow(HSV_FRAME_CAM);
 
@@ -56,7 +57,7 @@ void Matrix::initMain(VideoCapture& capture) {
 	//RGB를 HSV로 변환하는 메소드
 	cvtColor(Main_frame, hsv_frame, CV_BGR2HSV);
 
-	// inRange 메소드는 thrashold에서 우리가 받고 싶어하는 이미지를 흑백으로 받아와준다.
+	// inRange 메소드는 임계값(threshold)에서 우리가 받고 싶어하는 이미지를 이진으로 받아와준다.
 	inRange(hsv_frame, Scalar(minH, minS, minV), Scalar(maxH, maxS, maxV), binary_frame);
 }
 
@@ -72,23 +73,29 @@ void Matrix::morphologyFrame()
 {
 	// 손가락을 블러처리한다.
 	blurElement = getStructuringElement(MORPH_ELLIPSE,							// MORPH_RECT,
-		Size(2 * BLUR_ELEMENT_SIZE + 1, 2 * BLUR_ELEMENT_SIZE + 1),
+		Size(2*BLUR_ELEMENT_SIZE + 1, 2*BLUR_ELEMENT_SIZE + 1),
 		Point(BLUR_ELEMENT_SIZE, BLUR_ELEMENT_SIZE));
 
 	// 모폴로지(영상을 형태학적 관점으로 보는 것) 기법을 이용하도록 오픈한다.
 	morphologyEx(and_frame, morphology_frame, MORPH_OPEN, blurElement);
+	
+	// 블러처리한다.
+	//blurElement = getStructuringElement(MORPH_RECT,								// MORPH_ELLIPSE,
+	//	Size(2*BLUR_ELEMENT_SIZE + 1, 2*BLUR_ELEMENT_SIZE + 1),						// Size(2*BLUR_ELEMENT_SIZE +1
+	//	Point(BLUR_ELEMENT_SIZE, BLUR_ELEMENT_SIZE));
+
+	// 영상을 부드럽게 만든다.
+	GaussianBlur(morphology_frame, morphology_frame, Size(2 * BLUR_ELEMENT_SIZE + 1, 2 * BLUR_ELEMENT_SIZE  + 1), 5);
+	medianBlur(morphology_frame, morphology_frame, 5);
+	
+	//morphology_frame.copyTo(blur_erode_frame);
 
 	// 영상을 팽창(배경 축소, 물체 크기 확장)한다.
-	dilate(morphology_frame, morphology_frame, blurElement);
-
-	// 블러처리한다.
-	blurElement = getStructuringElement(MORPH_RECT,								// MORPH_ELLIPSE,
-		Size(BLUR_ELEMENT_SIZE + 1, BLUR_ELEMENT_SIZE + 1),						// Size(2*BLUR_ELEMENT_SIZE +1
-		Point(BLUR_ELEMENT_SIZE, BLUR_ELEMENT_SIZE));
+	dilate(morphology_frame, blur_erode_frame, blurElement);
 
 	// 영상을 2번 침식(배경 확장, 물체 크기 축소)한다.
 	erode(morphology_frame, blur_erode_frame, blurElement);
-	//erode(blur_erode_frame, blur_erode_frame, blurElement);
+	erode(morphology_frame, blur_erode_frame, blurElement);
 	blur_erode_frame.copyTo(contours_frame);
 
 	// TODO 침식했는데 다시 팽창하는 이유?, 두번 블러처리하는 이유?, 두번 침식하는 이유? - 지웠다 해봤다를 해보자
@@ -102,15 +109,15 @@ void Matrix::printFrame(bool frame_valid) {
 	}
 
 	try {
-		// 키보드
+		// 키보드 사각형
 		//keyboard.keyBoardReg(Main_frame);
 
 		// 마우스
 		setMouseCallback(MAIN_FRAME, mouse.onMouse, (void*)&Main_frame);
 
 		// 키보드 이미지 추가(alpha = 메인 투명도값, beta = 키보드 투명도값)
-		addWeighted(Main_frame, keyboard.getAlpha(), keyBoardImage, keyboard.getBeta(), 0.0, dst);
-		imshow(MAIN_FRAME, dst);
+		addWeighted(Main_frame, keyboard.getAlpha(), keyBoardImage, keyboard.getBeta(), 0.0, Main_frame);
+		imshow(MAIN_FRAME, Main_frame);
 		imshow(HSV_FRAME_CAM, hsv_frame);
 		imshow(BINARY_FRAME, binary_frame);
 		if (!background.empty()) {
