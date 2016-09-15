@@ -56,14 +56,16 @@ int main() {
 			frame_valid = false;
 		}
 
-		//처리를 끝내고 프레임 창을 나타냄
+		//처리를 끝내고 프레임 창을 출력
 		MATRIX->printFrame(frame_valid);
 
+		// ESC 누르면 break
 		if (waitKey(30) == 27) {
-			// ESC 누르면 break
 			break;
 		}
 	}
+
+	// 종료 작업
 	if (capture.isOpened()) {
 		capture.release();
 	}

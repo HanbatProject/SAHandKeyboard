@@ -6,6 +6,7 @@
 
 #include "stdafx.h"
 #include "TemplateSingleton.h"
+#include "KeyBoard.h"
 
 class Vector : public TemplateSingleton<Vector> {
 private:
@@ -22,11 +23,14 @@ private:
 	// 선을 감지하기 위한 벡터
 	vector<Vec4i> hierarchy;
 
-	// 움직이기 전 화면 손가락 크기들의 원
+	// 움직이기 전 화면 손가락 크기들
 	vector<vector<Point>> beforeHandTip;
 
-	// 움직인 후 손가락 크기들 원
+	// 움직인 후 손가락 크기들
 	vector<vector<Point>> handTip;
+
+	// 임시 손가락 크기들
+	vector<vector<Point>> tempHandTip;
 
 	// 볼록결함 - 움푹 들어간 부분 (ConvexityDefects)
 
@@ -44,6 +48,9 @@ private:
 	vector<vector<Point>> pointHull;	 // 외곽선
 	vector<vector<int>> hullIndexes;     // 외곽선 인덱스
 	int contSize = 0; // contours 크기
+
+	// 키보드
+	KeyBoard keyboard;
 
 public:
 	Vector();
