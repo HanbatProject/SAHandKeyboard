@@ -79,7 +79,7 @@ void Matrix::morphologyFrame()
 	// 모폴로지(영상을 형태학적 관점으로 보는 것) 기법을 이용하도록 오픈한다.
 	morphologyEx(and_frame, morphology_frame, MORPH_OPEN, blurElement);
 	
-	// 블러처리한다.
+	// MORPH_RECT로 한번더 블러처리한다.
 	//blurElement = getStructuringElement(MORPH_RECT,								// MORPH_ELLIPSE,
 	//	Size(2*BLUR_ELEMENT_SIZE + 1, 2*BLUR_ELEMENT_SIZE + 1),						// Size(2*BLUR_ELEMENT_SIZE +1
 	//	Point(BLUR_ELEMENT_SIZE, BLUR_ELEMENT_SIZE));
@@ -97,8 +97,6 @@ void Matrix::morphologyFrame()
 	erode(morphology_frame, blur_erode_frame, blurElement);
 	erode(morphology_frame, blur_erode_frame, blurElement);
 	blur_erode_frame.copyTo(contours_frame);
-
-	// TODO 침식했는데 다시 팽창하는 이유?, 두번 블러처리하는 이유?, 두번 침식하는 이유? - 지웠다 해봤다를 해보자
 }
 
 void Matrix::printFrame(bool frame_valid) {
@@ -121,11 +119,11 @@ void Matrix::printFrame(bool frame_valid) {
 		imshow(HSV_FRAME_CAM, hsv_frame);
 		imshow(BINARY_FRAME, binary_frame);
 		if (!background.empty()) {
-			imshow("back", background);
+			//imshow("back", background);
 		}
 		if (!differ_frame.empty()) {
 			imshow("erode", blur_erode_frame);
-			imshow("morphology", morphology_frame);
+			//imshow("morphology", morphology_frame);
 		}
 	}
 	catch (exception& e) {

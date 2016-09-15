@@ -33,9 +33,9 @@ void Vector::findDrawContours() {
 	contSize = (int)contours.size();
 
 	// 외곽선 그리기(Draw Contours)
-	for (int i = 0; i < contSize; i++) {
-		drawContours(MATRIX->getMainFrame(), contours, i, Scalar(128), 2, LINE_8, hierarchy);
-	}
+	//for (int i = 0; i < contSize; i++) {
+	//	drawContours(MATRIX->getMainFrame(), contours, i, Scalar(128), 2, LINE_8, hierarchy);
+	//}
 }
 
 void Vector::handRecognization() {
@@ -68,7 +68,7 @@ void Vector::handTipDetection(int i) {
 		vector<Point> pointCenter(contSize);
 		// 볼록한 외곽을 찾는 메소드
 		// convexHull(볼록 껍질) : 몇 개 점을 골라 안의 점을 모두 포함하는 최외곽 점들을 찾음
-		convexHull(handContours[i], hullIndexes[i]);
+		convexHull(handContours[i], hullIndexes[i], false, false);
 		
 		// convexityDefects : 볼록한 데서 결함(손가락 사이의 들어간 부분)을 찾음
 		convexityDefects(handContours[i], hullIndexes[i], vecDefects[i]);
@@ -112,8 +112,9 @@ void Vector::handTipDetection(int i) {
 		// 메인 프레임에 손의 외곽선을 그림
 		drawContours(MATRIX->getMainFrame(), pointHull, i, Scalar(0, 255, 0), 2, 8, hierarchy, 0, Point(0, 0));
 		
-		// 손의 추상적 네모형태를 그림
+		// 손의 네모형태를 그림
 		Rect handSquare(pointCenter[i].x - 125, pointCenter[i].y - 150, 250, 160);
+		//Rect handSquare(0,0,640, 480);
 		rectangle(MATRIX->getMainFrame(), handSquare, Scalar(255, 255, 0));
 		if (!handTip[i].empty() && i < 2) { //before value.hjhj
 			for (int k = 0; k < 5; k++) {
@@ -132,12 +133,11 @@ void Vector::handTipDetection(int i) {
 					       + pow(pointCenter[i].y - handContours[i][a].y, 2);
 				nextDist = pow(pointCenter[i].x - handContours[i][a + 1].x, 2)
 					       + pow(pointCenter[i].y - handContours[i][a + 1].y, 2);
-
 				if (currDist > preDist && currDist > nextDist && currDist > 64 * 64) { //handTip detection.
-
+					//cout << preDist << ", " << currDist << ", " << nextDist << endl;
 					handTip[i][tipCount] = handContours[i][a];
 					tipCount++;
-
+					
 					if (tipCount >= 5) break;
 
 					a = handPointDefects[tipCount];
