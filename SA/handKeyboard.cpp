@@ -2,8 +2,6 @@
 * @file objectDetection2.cpp
 * @author A. Huaman ( based in the classic facedetect.cpp in samples/c )
 * @brief A simplified version of facedetect.cpp, show how to load a cascade classifier and how to find objects (Face + eyes) in a video stream - Using LBP here
-* 손가락 : http://picoledelimao.github.io/blog/2015/11/15/fingertip-detection-on-opencv/ 참조
-* 키보드 이미지 : http://docs.opencv.org/2.4/doc/tutorials/core/adding_images/adding_images.html 참조
 */
 
 #include "stdafx.h"
