@@ -119,7 +119,7 @@ void Matrix::printFrame(bool frame_valid) {
 		imshow(HSV_FRAME_CAM, hsv_frame);
 		imshow(BINARY_FRAME, binary_frame);
 		if (!background.empty()) {
-			//imshow("back", background);
+			imshow("back", background);
 		}
 		if (!differ_frame.empty()) {
 			imshow("erode", blur_erode_frame);

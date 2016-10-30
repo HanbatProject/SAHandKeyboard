@@ -36,9 +36,9 @@ void Vector::findDrawContours() {
 	contSize = (int)contours.size();
 
 	// 외곽선 그리기(Draw Contours)
-	for (int i = 0; i < contSize; i++) {
-		drawContours(MATRIX->getMainFrame(), contours, i, Scalar(128), 2, LINE_8, hierarchy);
-	}
+	//for (int i = 0; i < contSize; i++) {
+	//	drawContours(MATRIX->getMainFrame(), contours, i, Scalar(128), 2, LINE_8, hierarchy);
+	//}
 }
 
 // 손 외곽 벡터(hand contours vector)를 구함
@@ -114,14 +114,22 @@ void Vector::handTipDetection(int i) {
 	pointCenter[i].x += 10;
 	pointCenter[i].y += 40;
 
+	// 손가락 끝을 그림
+	handTipDrawer(pointCenter, count, i);
+
+	// 손가락으로 키를 누르면 keyBoardInput 동작
+	keyBoardInput(count, i);
+}
+
+void Vector::handTipDrawer(vector<Point> pointCenter, int count, int i) {
 	// 손의 중앙에 원을 그림
 	//circle(Main_frame, pointCenter[i], 8*8, Scalar(0, 255, 0), 3);
 	//circle(MATRIX->getMainFrame(), pointCenter[i], 3, Scalar(0, 255, 0), 3);
-		
+
 	// 메인 프레임에 손의 외곽선을 그림
 	//drawContours(MATRIX->getMainFrame(), pointHull, i, Scalar(0, 255, 0),
 	//				2, 8, hierarchy, 0, Point(0, 0));
-		
+
 	// 손의 네모형태를 그림
 	Rect handSquare(pointCenter[i].x - 125, pointCenter[i].y - 150, 250, 160);
 	//rectangle(MATRIX->getMainFrame(), handSquare, Scalar(255, 255, 0));
@@ -136,25 +144,26 @@ void Vector::handTipDetection(int i) {
 			handTip[i][a] = tempHandTip[i][a];
 		}
 	}
+
 	/*
 	double preDist = 0, nextDist = 0, currDist = 0;
 	for (int a = 1; a < handContours[i].size() - 1; a++) {
-		if (handContours[i][a].inside(handSquare)) {
-			preDist = pow(pointCenter[i].x - handContours[i][a - 1].x, 2)
-					    + pow(pointCenter[i].y - handContours[i][a - 1].y, 2);
-			currDist = pow(pointCenter[i].x - handContours[i][a].x, 2)
-					    + pow(pointCenter[i].y - handContours[i][a].y, 2);
-			nextDist = pow(pointCenter[i].x - handContours[i][a + 1].x, 2)
-					    + pow(pointCenter[i].y - handContours[i][a + 1].y, 2);
-			if (currDist > preDist && currDist > nextDist && currDist > 64 * 64) { //handTip detection.
-				handTip[i][tipCount] = handContours[i][a];
-				tipCount++;
-					
-				if (tipCount >= 5) break;
+	if (handContours[i][a].inside(handSquare)) {
+	preDist = pow(pointCenter[i].x - handContours[i][a - 1].x, 2)
+	+ pow(pointCenter[i].y - handContours[i][a - 1].y, 2);
+	currDist = pow(pointCenter[i].x - handContours[i][a].x, 2)
+	+ pow(pointCenter[i].y - handContours[i][a].y, 2);
+	nextDist = pow(pointCenter[i].x - handContours[i][a + 1].x, 2)
+	+ pow(pointCenter[i].y - handContours[i][a + 1].y, 2);
+	if (currDist > preDist && currDist > nextDist && currDist > 64 * 64) { //handTip detection.
+	handTip[i][tipCount] = handContours[i][a];
+	tipCount++;
 
-				a = handPointDefects[tipCount];
-			}
-		}
+	if (tipCount >= 5) break;
+
+	a = handPointDefects[tipCount];
+	}
+	}
 	}
 	*/
 
@@ -162,8 +171,9 @@ void Vector::handTipDetection(int i) {
 	for (int t = 0; t < count; t++) {
 		circle(MATRIX->getMainFrame(), handTip[i][t], 5, Scalar(255, 0, 0), 3);
 	}
+}
 
-	// 손가락으로 키를 누르면 keyBoardInput 동작
+void Vector::keyBoardInput(int count, int i) {
 	if (handTip[i].empty()) {
 		return;
 	}
@@ -177,48 +187,6 @@ void Vector::handTipDetection(int i) {
 			}
 		}
 	}
-}
-
-// 앵글을 이용한 손가락 찾기 - 현재 쓰지 않음.
-float Vector::innerAngle(float px1, float py1, float px2, float py2, float cx1, float cy1)
-{
-	float dist1 = sqrt((px1 - cx1)*(px1 - cx1) + (py1 - cy1)*(py1 - cy1));
-	float dist2 = sqrt((px2 - cx1)*(px2 - cx1) + (py2 - cy1)*(py2 - cy1));
-
-	float Ax, Ay;
-	float Bx, By;
-	float Cx, Cy;
-
-	//find closest point to C  
-	//printf("dist = %lf %lf\n", dist1, dist2);  
-
-	Cx = cx1;
-	Cy = cy1;
-	if (dist1 < dist2)
-	{
-		Bx = px1;
-		By = py1;
-		Ax = px2;
-		Ay = py2;
-	}
-	else {
-		Bx = px2;
-		By = py2;
-		Ax = px1;
-		Ay = py1;
-	}
-	float Q1 = Cx - Ax;
-	float Q2 = Cy - Ay;
-	float P1 = Bx - Ax;
-	float P2 = By - Ay;
-
-	float A = acos((P1*Q1 + P2*Q2) / (sqrt(P1*P1 + P2*P2) * sqrt(Q1*Q1 + Q2*Q2)));
-	A = A * 180 / (float)CV_PI;
-
-	return A;
-}
-void Vector::handTipDetectWithAngle() {
-	
 }
 
 // 소멸자

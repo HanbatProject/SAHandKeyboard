@@ -57,10 +57,9 @@ public:
 	void initHandTip();
 	void findDrawContours();
 	void handRecognization();
-	void handTipDetection(int i);
-
-	float innerAngle(float, float, float, float, float, float);
-	void handTipDetectWithAngle();
+	void handTipDetection(int);
+	void handTipDrawer(vector<Point>, int, int);
+	void keyBoardInput(int, int);
 
 	~Vector();
 };
